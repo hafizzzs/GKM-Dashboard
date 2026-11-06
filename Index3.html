@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Rainbow</title>
+<style>
+:root{
+  --bg:#F2F2F7; --card:#FFFFFF; --fill:#E9E9EB; --sep:rgba(60,60,67,.18);
+  --label:#000; --label2:rgba(60,60,67,.6); --label3:rgba(60,60,67,.3);
+  --blue:#007AFF; --green:#34C759; --orange:#FF9500; --red:#FF3B30; --yellow:#FFCC00; --indigo:#5856D6; --teal:#30B0C7; --gray:#8E8E93; --pink:#FF2D55;
+  --bar:rgba(242,242,247,.8);
+  --sb:env(safe-area-inset-bottom,0px); --st:env(safe-area-inset-top,0px);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#000; --card:#1C1C1E; --fill:#2C2C2E; --sep:rgba(84,84,88,.6);
+  --label:#fff; --label2:rgba(235,235,245,.6); --label3:rgba(235,235,245,.3);
+  --blue:#0A84FF; --green:#30D158; --orange:#FF9F0A; --red:#FF453A; --yellow:#FFD60A; --indigo:#5E5CE6; --teal:#40C8E0; --gray:#8E8E93; --pink:#FF375F;
+  --bar:rgba(22,22,24,.8);
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--label);font:17px/1.29 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- navigation bar (large title → inline) ---------- */
+.navbar{position:sticky;top:0;z-index:10;padding-top:var(--st);background:transparent;transition:background .2s,border-color .2s;border-bottom:.5px solid transparent}
+.navbar.scrolled{background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom-color:var(--sep)}
+.navbar .in{height:44px;display:flex;align-items:center;justify-content:center;position:relative}
+.navbar .small{font-size:17px;font-weight:600;opacity:0;transition:opacity .15s}
+.navbar.scrolled .small{opacity:1}
+.navbar .act{position:absolute;right:12px;top:6px;width:32px;height:32px;border-radius:50%;border:0;background:var(--fill);color:var(--blue);display:flex;align-items:center;justify-content:center}
+.navbar .act.spin svg{animation:sp .9s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.large{padding:2px 16px 6px}
+.large h1{font-size:34px;line-height:41px;font-weight:700;letter-spacing:.37px;margin:0}
+.large .cap{font-size:15px;color:var(--label2);margin-top:1px}
+.stale{font-size:12px;color:var(--orange);font-weight:600;margin-left:6px}
+
+main{padding:4px 16px calc(96px + var(--sb));max-width:680px;margin:0 auto}
+section{display:none;animation:fd .22s ease}section.on{display:block}@keyframes fd{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- inset grouped ---------- */
+.hdr{font-size:13px;color:var(--label2);text-transform:uppercase;letter-spacing:-.08px;margin:22px 16px 7px}
+.hdr.big{font-size:22px;line-height:28px;font-weight:700;color:var(--label);text-transform:none;letter-spacing:.35px;margin:24px 0 8px}
+.ftr{font-size:13px;color:var(--label2);margin:7px 16px 0;line-height:1.35}
+.group{background:var(--card);border-radius:12px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 16px;position:relative}
+.row+.row:before{content:"";position:absolute;top:0;right:0;left:16px;border-top:.5px solid var(--sep)}
+.row.ic+.row.ic:before{left:60px}
+.row .ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex:none;color:#fff}
+.row .ico svg{width:18px;height:18px}
+.row .t{flex:1;min-width:0;padding:11px 0}
+.row .t .s{font-size:13px;color:var(--label2);margin-top:1px}
+.row .v{color:var(--label2);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.row .v.b{color:var(--label);font-weight:600}
+.chev{color:var(--label3);font-size:20px;line-height:1;margin-left:-4px}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border-radius:16px;padding:16px}
+.card+.card{margin-top:12px}
+.eyebrow{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.eyebrow svg{width:16px;height:16px}
+.big{font-size:28px;font-weight:700;letter-spacing:.36px;line-height:1.15}
+.big small{font-size:17px;font-weight:600;color:var(--label2);margin-left:3px}
+.sub{font-size:15px;color:var(--label2)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.w{background:var(--card);border-radius:16px;padding:14px 14px 13px;min-width:0}
+.w .k{font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.w .k svg{width:15px;height:15px}
+.w .n{font-size:24px;font-weight:700;margin-top:8px;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w .d{font-size:13px;color:var(--label2);margin-top:2px}
+
+/* ---------- rings ---------- */
+.rings{display:flex;align-items:center;gap:18px}
+.rings svg{flex:none}
+.legend{flex:1;min-width:0}
+.legend .l{padding:5px 0}
+.legend .l .a{font-size:13px;font-weight:600}
+.legend .l .b{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.legend .l .b small{font-size:13px;font-weight:500;color:var(--label2);margin-left:4px}
+
+/* ---------- capsule bars ---------- */
+.cap-bar{height:8px;border-radius:4px;background:var(--fill);overflow:hidden;position:relative;margin-top:7px}
+.cap-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.cap-bar b{position:absolute;top:-2px;bottom:-2px;width:2px;border-radius:1px;background:var(--label)}
+
+/* ---------- pills ---------- */
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:20px;vertical-align:1px}
+
+/* ---------- chart ---------- */
+.chartwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px -6px 0;scrollbar-width:none}
+.chartwrap::-webkit-scrollbar{display:none}
+.chartwrap svg{display:block}
+.chartwrap text{fill:var(--label2);font-size:11px}
+.bar-r{transition:opacity .15s}
+
+/* ---------- insights ---------- */
+.ins{display:flex;gap:12px;padding:13px 16px;position:relative}
+.ins+.ins:before{content:"";position:absolute;top:0;right:0;left:58px;border-top:.5px solid var(--sep)}
+.ins .ic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;color:#fff}
+.ins .ic svg{width:16px;height:16px}
+.ins .m{flex:1;min-width:0}
+.ins .a{font-size:13px;font-weight:600}
+.ins .tt{font-size:15px;font-weight:600;margin-top:1px}
+.ins .no{font-size:13px;color:var(--label2);margin-top:2px}
+.ins .vv{font-size:15px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums;padding-top:16px}
+
+/* ---------- disclosure ---------- */
+details>summary{list-style:none;cursor:pointer}
+details>summary::-webkit-details-marker{display:none}
+details>summary .chev{transition:transform .2s;display:inline-block}
+details[open]>summary .chev{transform:rotate(90deg)}
+
+/* ---------- tab bar ---------- */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--sep);padding-bottom:var(--sb)}
+.tabbar button{flex:1;border:0;background:none;color:var(--gray);padding:7px 0 4px;font:500 10px/1.2 -apple-system,BlinkMacSystemFont,sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tabbar button svg{width:26px;height:26px}
+.tabbar button.on{color:var(--blue)}
+
+.skel{height:120px;border-radius:16px;background:var(--card);margin-bottom:12px;position:relative;overflow:hidden}
+.skel:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--fill),transparent);animation:sh 1.2s infinite;transform:translateX(-100%)}
+@keyframes sh{to{transform:translateX(100%)}}
+.err{background:var(--card);border-radius:12px;padding:12px 16px;color:var(--red);font-size:15px;margin-bottom:12px}
+.c-red{color:var(--red)}.c-green{color:var(--green)}.c-orange{color:var(--orange)}.c-blue{color:var(--blue)}.c-gray{color:var(--label2)}
+</style>
+</head>
+<body>
+
+<div class="navbar" id="navbar"><div class="in">
+  <div class="small" id="smallTitle">Ringkasan</div>
+  <button class="act" id="refresh" aria-label="Muat ulang" onclick="load(true)">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+  </button>
+</div></div>
+
+<div class="large"><h1 id="bigTitle">Ringkasan</h1><div class="cap" id="cap">Memuat data…</div></div>
+
+<main>
+  <div id="err"></div>
+  <section id="s-home" class="on"><div class="skel"></div><div class="skel"></div><div class="skel"></div></section>
+  <section id="s-rcv"></section>
+  <section id="s-rbg"></section>
+  <section id="s-out"></section>
+</main>
+
+<nav class="tabbar">
+  <button class="on" data-s="home" data-t="Ringkasan"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 13h6V4H4zm0 7h6v-5H4zm8 0h8v-9h-8zm0-16v5h8V4z"/></svg>Ringkasan</button>
+  <button data-s="rcv" data-t="Receiving"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 15h18l-2.2 4.4a1 1 0 0 1-.9.6H6.1a1 1 0 0 1-.9-.6zM6 9h12v5H6zm5-6h2v5h-2z"/></svg>Receiving</button>
+  <button data-s="rbg" data-t="Rebagging"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 6V5a4 4 0 0 1 8 0v1h3l1 15H4L5 6zm2 0h4V5a2 2 0 0 0-4 0z"/></svg>Rebagging</button>
+  <button data-s="out" data-t="Delivery"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5h12v11H2zm13 4h4l3 3.5V16h-7z"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="18" r="2.2"/></svg>Delivery</button>
+</nav>
+
+<script>
+var D=null, KEY='rainbow_dash_v2', TAB='home';
+function $(i){return document.getElementById(i)}
+
+/* ---------- format ---------- */
+var BLN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+function n0(x){return x==null||isNaN(x)?'–':Math.round(x).toLocaleString('id-ID')}
+function n1(x){return x==null||isNaN(x)?'–':x.toLocaleString('id-ID',{minimumFractionDigits:1,maximumFractionDigits:1})}
+function ton(kg){return n1(kg/1000)}
+function par(x){return x<0?'('+n0(-x)+')':n0(x)}
+function pct(x,d){d=d==null?1:d;return x==null||isNaN(x)?'–':(x*100).toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d})+'%'}
+function ppar(x,d){return x<0?'('+pct(-x,d)+')':'+'+pct(x,d)}
+function dt(k){if(!k)return '–';var p=k.split('-');return +p[2]+' '+BLN[+p[1]-1]+' '+p[0].slice(2)}
+function dd(k){var p=k.split('-');return +p[2]+'/'+(+p[1])}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ---------- ikon ---------- */
+var I={
+  warn:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 1.5 21h21zm-1 6h2v6h-2zm0 8h2v2h-2z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17l9-10"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 10h2v8h-2zm0-4h2v2h-2z"/></svg>',
+  ship:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 15h18l-2.2 4.4a1 1 0 0 1-.9.6H6.1a1 1 0 0 1-.9-.6zM6 9h12v5H6zm5-6h2v5h-2z"/></svg>',
+  bag:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 6V5a4 4 0 0 1 8 0v1h3l1 15H4L5 6zm2 0h4V5a2 2 0 0 0-4 0z"/></svg>',
+  truck:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5h12v11H2zm13 4h4l3 3.5V16h-7z"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="18" r="2.2"/></svg>',
+  scale:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 3h2v3h6l-3 7a3.5 3.5 0 0 1-6.9 0H9L6 6v0l-3 7a3.5 3.5 0 0 0 7 0L7 6h4zm6 4-2.2 6h4.4zM7 7l-2.2 6h4.4zM5 20h14v2H5z"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h2v2h6V2h2v2h3v17H4V4h3zm-1 7v10h12V9z"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h8l5 5v15H6zm8 1.5V8h4.5zM8 12h8v1.5H8zm0 3h8v1.5H8z"/></svg>',
+  flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2s6 5 6 11a6 6 0 0 1-12 0c0-3 2-5 2-5s0 3 2 4c0-5 2-10 2-10z"/></svg>',
+  drop:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13z"/></svg>'
+};
+var SEV={high:{c:'var(--red)',i:I.warn,w:'Kritis'},mid:{c:'var(--orange)',i:I.warn,w:'Perhatian'},low:{c:'var(--gray)',i:I.info,w:'Info'},ok:{c:'var(--green)',i:I.check,w:'Aman'}};
+var AREA={Receiving:I.ship,Rebagging:I.bag,Delivery:I.truck,'Jumbo Bag':I.bag,Susut:I.drop,Data:I.doc};
+
+/* ---------- komponen ---------- */
+function row(t,v,o){o=o||{};return '<div class="row'+(o.ic?' ic':'')+'">'+(o.ic?'<span class="ico" style="background:'+o.bg+'">'+o.ic+'</span>':'')+
+  '<div class="t">'+t+(o.s?'<div class="s">'+o.s+'</div>':'')+'</div><div class="v '+(o.b?'b ':'')+(o.cls||'')+'">'+v+'</div>'+(o.chev?'<span class="chev">›</span>':'')+'</div>'}
+function widget(k,ic,col,n,d,ncls){return '<div class="w"><div class="k" style="color:'+col+'">'+ic+k+'</div><div class="n num '+(ncls||'')+'">'+n+'</div><div class="d">'+d+'</div></div>'}
+function capbar(p,col,mark){p=Math.max(0,Math.min(p||0,1));return '<div class="cap-bar"><i style="width:'+(p*100).toFixed(1)+'%;background:'+col+'"></i>'+(mark!=null?'<b style="left:calc('+(Math.min(mark,1)*100).toFixed(1)+'% - 1px)"></b>':'')+'</div>'}
+function rings(list){ // [{p,color}]
+  var S=148,c=S/2,sw=15,g=3,s='<svg width="'+S+'" height="'+S+'" viewBox="0 0 '+S+' '+S+'">';
+  list.forEach(function(x,i){var r=c-sw/2-i*(sw+g),C=2*Math.PI*r,p=Math.max(0,Math.min(x.p,1));
+    s+='<circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="none" stroke="'+x.color+'" stroke-opacity=".2" stroke-width="'+sw+'"/>';
+    s+='<circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="none" stroke="'+x.color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(C*p).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 '+c+' '+c+')"/>';});
+  return s+'</svg>'}
+var CH={};
+function chart(id,rows,key,o){
+  o=o||{}; if(!rows.length) return '<div class="sub" style="margin-top:8px">Belum ada data</div>';
+  CH[id]={rows:rows,key:key,o:o};
+  var bw=Math.max(14,Math.min(30,Math.floor(300/rows.length)-8)),gap=8,h=170,top=10,bot=22,W=Math.max(rows.length*(bw+gap)+gap+34,320);
+  var max=Math.max.apply(null,rows.map(function(r){return r[key]||0}).concat([o.target||0]))*1.1||1;
+  var y=function(v){return top+(h-top-bot)*(1-v/max)};
+  var s='<svg id="'+id+'" width="'+W+'" height="'+h+'" viewBox="0 0 '+W+' '+h+'">';
+  [0,.5,1].forEach(function(f){var v=max/1.1*f,yy=y(v);s+='<line x1="0" x2="'+(W-34)+'" y1="'+yy+'" y2="'+yy+'" stroke="var(--sep)" stroke-width=".5"/><text x="'+(W-30)+'" y="'+(yy+4)+'">'+(o.ax?o.ax(v):n0(v))+'</text>';});
+  rows.forEach(function(r,i){var v=r[key]||0,x=gap+i*(bw+gap),yy=y(v),c=o.color?o.color(r):'var(--blue)';
+    s+='<rect class="bar-r" data-i="'+i+'" x="'+x+'" y="'+yy+'" width="'+bw+'" height="'+Math.max(h-bot-yy,2)+'" rx="'+Math.min(5,bw/3)+'" fill="'+c+'"/>';
+    s+='<rect data-i="'+i+'" x="'+(x-gap/2)+'" y="0" width="'+(bw+gap)+'" height="'+h+'" fill="transparent"/>';
+    if(rows.length<=14||i%2===0) s+='<text x="'+(x+bw/2)+'" y="'+(h-6)+'" text-anchor="middle">'+dd(r.day)+'</text>';});
+  if(o.target){var ty=y(o.target);s+='<line x1="0" x2="'+(W-34)+'" y1="'+ty+'" y2="'+ty+'" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="3 3"/>';}
+  return '<div class="chartwrap">'+s+'</svg></div>';
+}
+function bindCharts(){
+  Object.keys(CH).forEach(function(id){var svg=document.getElementById(id); if(!svg) return;
+    svg.addEventListener('click',function(e){var i=e.target.getAttribute('data-i'); if(i==null) return; i=+i;
+      var c=CH[id]; Array.prototype.forEach.call(svg.querySelectorAll('.bar-r'),function(b){b.style.opacity=(+b.getAttribute('data-i')===i)?1:.35});
+      var el=document.getElementById(id+'-h'); if(el&&c.o.head) el.innerHTML=c.o.head(c.rows[i]);});
+  });
+}
+
+/* ---------- render ---------- */
+function render(d,stale){
+  D=d; CH={}; var k=d.kpi, lin=k.slaDay/k.slaDays;
+  $('cap').innerHTML='MV. The Rainbow · Hari '+k.slaDay+' dari '+k.slaDays+(stale?'<span class="stale">• tersimpan</span>':'');
+
+  /* ===== RINGKASAN ===== */
+  var h='';
+  h+='<div class="card"><div class="rings">'+rings([{p:k.rbg.pct,color:'var(--green)'},{p:k.out.pct,color:'var(--blue)'},{p:k.pg.pct,color:'var(--teal)'}])+
+     '<div class="legend">'+
+     '<div class="l"><div class="a c-green">Rebagging</div><div class="b">'+pct(k.rbg.pct)+'<small>'+ton(k.rbg.kg)+' t</small></div></div>'+
+     '<div class="l"><div class="a c-blue">Dikirim</div><div class="b">'+pct(k.out.pct)+'<small>'+ton(k.out.kg)+' t</small></div></div>'+
+     '<div class="l"><div class="a" style="color:var(--teal)">Diterima PG</div><div class="b">'+pct(k.pg.pct)+'<small>'+ton(k.pg.terima)+' t</small></div></div>'+
+     '</div></div><div class="ftr" style="margin:12px 0 0">Seharusnya '+pct(lin,0)+' per hari ini bila linear terhadap SLA '+k.slaDays+' hari. Dasar '+ton(k.rcv.base)+' t.</div></div>';
+
+  h+='<div class="hdr big">Sorotan</div><div class="group">'+d.concerns.map(function(c){var s=SEV[c.sev];
+     return '<div class="ins"><span class="ic" style="background:'+s.c+'">'+(AREA[c.area]||s.i)+'</span><div class="m"><div class="a" style="color:'+s.c+'">'+esc(c.area)+' · '+s.w+'</div><div class="tt">'+esc(c.title)+'</div><div class="no">'+esc(c.note)+'</div></div><div class="vv">'+esc(c.value)+'</div></div>'}).join('')+'</div>';
+
+  var late=k.out.delay>0;
+  h+='<div class="hdr big">Proyeksi</div><div class="grid">'+
+     widget('SLA',I.cal,'var(--indigo)',Math.max(k.slaDays-k.slaDay,0)+' <small style="font-size:15px;color:var(--label2)">hari lagi</small>','batas '+dt(k.slaEnd))+
+     widget('Rebagging',I.bag,'var(--green)',dt(k.rbg.finish),'selesai · pace '+n0(k.rbg.avg)+' JB/hari',k.rbg.finish>k.slaEnd?'c-red':'')+
+     widget('Delivery',I.truck,'var(--blue)',dt(k.out.finish),late?'telat '+k.out.delay+' hari dari SLA':'sesuai SLA',late?'c-red':'')+
+     widget('Susut',I.drop,'var(--teal)',pct(k.pg.use,0),'kuota 0,2% terpakai (proyeksi)',k.pg.use>.8?'c-red':(k.pg.use>.5?'c-orange':'c-green'))+'</div>';
+  h+='<div class="hdr">Receiving</div><div class="group">'+
+     row('Penerimaan',ton(k.rcv.total)+' t',{ic:I.ship,bg:'var(--orange)',s:pct(k.rcv.total/k.party)+' dari 50.000 t'})+
+     row('Terkoreksi',ton(k.rcv.base)+' t',{ic:I.check,bg:'var(--green)',b:1,s:'setelah buang double input'})+
+     (k.jb.found?row('Stok jumbo bag',n1(k.jb.cover)+' hari',{ic:I.bag,bg:k.jb.cover<7.5?'var(--red)':'var(--orange)',s:n0(k.jb.stock)+' JB kosong tersisa',cls:k.jb.cover<7.5?'c-red':''}):'')+'</div>';
+  $('s-home').innerHTML=h;
+
+  /* ===== RECEIVING ===== */
+  var r=d.rcv; h='';
+  var dbl=r.flags.filter(function(f){return f.level==='double'&&f.counted});
+  h+='<div class="card"><div class="eyebrow c-orange">'+I.ship+'Total Penerimaan</div><div class="big num">'+ton(k.rcv.total)+'<small>ton</small></div>'+
+     '<div class="sub">'+n0(k.rcv.truk)+' truk · '+(k.rcv.vsParty>=0?'+':'')+ton(k.rcv.vsParty)+' t vs B/L</div>'+capbar(k.rcv.total/k.party,'var(--orange)')+'</div>';
+  h+='<div class="hdr">Koreksi</div><div class="group">'+
+     row('Total di file',ton(k.rcv.total)+' t')+
+     row('Double input',par(-k.rcv.dupKg)+' kg',{cls:k.rcv.dupKg?'c-red':'',s:dbl.length+' baris terhitung'})+
+     row('Terkoreksi',ton(k.rcv.base)+' t',{b:1})+'</div>';
+  h+='<div class="hdr">Cek Double Input</div><div class="group">'+(r.flags.length?r.flags.map(function(f){
+     var col=f.level==='suspect'?'var(--orange)':(f.counted?'var(--red)':'var(--gray)'), lab=f.level==='suspect'?'Suspect':(f.counted?'Double':'Belum terhitung');
+     return '<div class="ins"><span class="ic" style="background:'+col+'">'+I.warn+'</span><div class="m"><div class="a" style="color:'+col+'">'+lab+' · baris '+f.row+' vs '+f.pair+'</div><div class="tt">'+esc(f.plat)+'</div><div class="no">SJ '+esc(f.sj||'–')+' / '+esc(f.pairSj||'–')+' · '+esc(f.time)+'<br>'+esc(f.reason)+'</div></div><div class="vv num">'+n0(f.netto)+'</div></div>'}).join(''):row('Tidak ada indikasi double input','',{ic:I.check,bg:'var(--green)'}))+'</div>'+
+     '<div class="ftr">Netto dalam kg. Double = mengurangi total. Belum terhitung = baris tanpa palka yang harus dihapus.</div>';
+  h+='<div class="hdr">Per Palka</div><div class="group">'+r.palka.map(function(p){
+     return '<div class="row"><div class="t">'+esc(p.name)+'<div class="s">'+ton(p.kg)+' / '+ton(p.plan)+' t</div>'+capbar(p.pct,p.pct>=1?'var(--green)':'var(--orange)')+'</div><div class="v b" style="min-width:58px">'+pct(p.pct)+'</div></div>'}).join('')+'</div>';
+  var rAvg=r.daily.length?r.daily.reduce(function(a,x){return a+x.kg},0)/r.daily.length:0;
+  h+='<div class="hdr big">Harian</div><div class="card"><div id="cr-h">'+headRcv(null,rAvg)+'</div>'+chart('cr',r.daily,'kg',{color:function(){return 'var(--orange)'},ax:function(v){return n0(v/1000)},head:function(x){return headRcv(x)}})+'</div>';
+  $('s-rcv').innerHTML=h;
+
+  /* ===== REBAGGING ===== */
+  var b=k.rbg; h='';
+  h+='<div class="card"><div id="cb-h">'+headRbg(null)+'</div>'+chart('cb',d.rbg.daily,'jb',{target:b.target,color:function(x){return x.hit?'var(--green)':'var(--orange)'},head:headRbg})+
+     '<div class="ftr" style="margin:8px 0 0">Garis hijau = target '+n0(b.target)+' JB. Ketuk batang untuk melihat per hari.</div></div>';
+  h+='<div class="hdr">Pencapaian</div><div class="group">'+
+     row('Capai target',b.hitDays+' dari '+b.days+' hari',{ic:I.check,bg:'var(--green)'})+
+     row('Total terisi',n0(b.jb)+' JB',{ic:I.bag,bg:'var(--indigo)',s:ton(b.kg)+' t · '+n0(b.kgPerJb)+' kg/JB'})+
+     row('Progress',pct(b.pct),{ic:I.flame,bg:'var(--orange)',s:'dari '+ton(k.rcv.base)+' t'})+'</div>';
+  h+='<div class="hdr">Proyeksi SLA · batas '+dt(k.slaEnd)+'</div><div class="group">'+
+     row('Selesai, pace saat ini',dt(b.finish),{ic:I.cal,bg:b.finish>k.slaEnd?'var(--red)':'var(--green)',b:1,cls:b.finish>k.slaEnd?'c-red':'c-green'})+
+     row('Selesai bila 1.000 JB/hari',dt(b.finishTarget),{ic:I.cal,bg:'var(--blue)'})+
+     row('Butuh pace',n0(b.needPace)+' JB/hari',{ic:I.flame,bg:'var(--pink)',s:'sisa '+n0(b.remJb)+' JB'})+'</div>';
+  if(k.jb.found){
+    h+='<div class="hdr">Jumbo Bag</div><div class="group">'+
+       '<div class="row"><div class="t">Terpakai<div class="s">'+n0(k.jb.used)+' dari '+n0(k.jb.in)+' JB diadakan</div>'+capbar(k.jb.used/k.jb.in,'var(--indigo)')+'</div></div>'+
+       row('Stok kosong',n0(k.jb.stock)+' JB',{s:'±'+n1(k.jb.cover)+' hari pada target',cls:k.jb.cover<7.5?'c-red':'c-orange'})+
+       row('Kurang pengadaan',n0(k.jb.short)+' JB',{b:1,cls:k.jb.short?'c-red':'',s:'kebutuhan total '+n0(k.jb.need)+' JB'})+'</div>';
+  }
+  h+='<div class="hdr">Rincian Harian</div><div class="group">'+d.rbg.daily.slice().reverse().map(function(x){
+     return row(dt(x.day),n0(x.jb)+' JB',{s:ton(x.kg)+' t',cls:x.hit?'c-green':'c-orange'})}).join('')+'</div>';
+  $('s-rbg').innerHTML=h;
+
+  /* ===== DELIVERY ===== */
+  var o=k.out,g=k.pg,od=d.out; h='';
+  h+='<div class="card"><div id="co-h">'+headOut(null)+'</div>'+chart('co',od.daily,'kg',{ax:function(v){return n0(v/1000)},head:headOut})+'</div>';
+  h+='<div class="hdr">Status</div><div class="group">'+
+     row('Terkirim',ton(o.kg)+' t',{ic:I.truck,bg:'var(--blue)',s:n0(o.truk)+' truk · '+n0(o.jb)+' JB'})+
+     row('Dalam perjalanan',n0(o.transit)+' truk',{ic:I.truck,bg:'var(--orange)',s:ton(o.transitKg)+' t'})+
+     row('Diterima PG',ton(g.terima)+' t',{ic:I.check,bg:'var(--teal)',s:n0(g.truk)+' truk ditimbang lengkap'})+'</div>';
+  h+='<div class="hdr">Proyeksi SLA · batas '+dt(k.slaEnd)+'</div><div class="group">'+
+     row('Selesai, pace saat ini',dt(o.finish),{ic:I.cal,bg:o.delay>0?'var(--red)':'var(--green)',b:1,cls:o.delay>0?'c-red':'c-green',s:o.delay>0?'telat '+o.delay+' hari':'sesuai SLA'})+
+     row('Rata-rata kirim',n0(o.avgJb)+' JB/hari',{ic:I.flame,bg:'var(--orange)'})+
+     row('Butuh pace',n0(o.needPace)+' JB/hari',{ic:I.flame,bg:'var(--pink)',b:1,s:'±'+Math.ceil(o.needTruk)+' truk per hari'})+'</div>';
+  h+='<div class="hdr big">Susut</div><div class="card"><div class="eyebrow" style="color:var(--teal)">'+I.drop+'Kuota Susut 0,2%</div>'+
+     '<div class="big num">'+pct(g.use,0)+'<small>terpakai (proyeksi)</small></div><div class="sub">'+ton(g.proj)+' t dari maks '+ton(g.tolKg)+' t</div>'+
+     capbar(g.use,g.use>.8?'var(--red)':(g.use>.5?'var(--orange)':'var(--teal)'))+'</div>';
+  h+='<div class="group" style="margin-top:12px">'+
+     row('Susut',par(g.susut)+' kg',{cls:'c-red',s:'rate '+ppar(g.rate,3)+' dari muatan'})+
+     row('Lebih',n0(g.lebih)+' kg',{cls:'c-green'})+
+     row('Bersih',par(g.net)+' kg',{b:1})+
+     row('Truk susut > 0,2%',n0(g.over)+' truk',{cls:g.over?'c-orange':''})+
+     (g.tarePending?row('Tare PG belum diinput',n0(g.tarePending)+' truk',{cls:'c-orange',s:'tidak ikut dihitung'}):'')+'</div>';
+  h+='<div class="hdr">Per PG</div><div class="group">'+od.perPg.map(function(p){
+     return row(esc(p.name),ppar(p.pct,2),{s:n0(p.truk)+' truk · susut '+par(p.susut)+' · bersih '+par(p.net)+' kg',b:1,cls:p.pct<0?'c-red':'c-green'})}).join('')+'</div>'+
+     '<div class="ftr">Nilai dalam kurung ( ) = susut. PG yang konsisten "lebih" perlu cek kalibrasi timbangan.</div>';
+  h+=disc('Truk Susut Terbesar',od.worst.length,od.worst.map(function(t){
+     return row(esc(t.plat)+(t.status==='over'?' <span class="pill" style="background:var(--red);color:#fff">&gt;0,2%</span>':''),par(t.selisih)+' kg',{cls:'c-red',s:'SJ '+esc(t.sj)+' · '+esc((t.pg||t.tujuan||'').replace('PG ',''))+' · '+dt(t.day)+' · ('+pct(-t.pct,2)+')'})}).join(''));
+  h+=disc('Dalam Perjalanan',od.transit.length,od.transit.map(function(t){
+     return row(esc(t.plat),n0(t.muat)+' kg',{s:'SJ '+esc(t.sj)+' · '+esc((t.tujuan||'').replace('PG ',''))+' · '+dt(t.day)})}).join(''));
+  h+=disc('Catatan Data',od.issues.length,od.issues.map(function(i){
+     return row(esc(i.type),'SJ '+esc(i.sj),{s:esc(i.plat)+' · '+esc(i.note)})}).join(''));
+  $('s-out').innerHTML=h;
+
+  bindCharts();
+}
+function disc(title,n,body){return '<details style="margin-top:22px"><summary><div class="group"><div class="row"><div class="t" style="font-weight:600">'+title+'</div><div class="v">'+n+'</div><span class="chev">›</span></div></div></summary><div class="group" style="margin-top:8px">'+(body||row('Tidak ada','',{}))+'</div></details>'}
+function headRcv(x,avg){return x?'<div class="eyebrow c-orange">'+I.ship+dt(x.day)+'</div><div class="big num">'+ton(x.kg)+'<small>ton</small></div><div class="sub">'+n0(x.truk)+' truk</div>'
+  :'<div class="eyebrow c-orange">'+I.ship+'Rata-rata Harian</div><div class="big num">'+ton(avg)+'<small>ton/hari</small></div><div class="sub">Terakhir '+dt(D.kpi.rcv.lastDay)+'</div>'}
+function headRbg(x){var b=D.kpi.rbg;return x?'<div class="eyebrow c-green">'+I.bag+dt(x.day)+'</div><div class="big num">'+n0(x.jb)+'<small>JB</small></div><div class="sub">'+ton(x.kg)+' t · '+(x.hit?'<span class="c-green">target tercapai</span>':'<span class="c-orange">'+pct(x.jb/b.target,0)+' dari target</span>')+'</div>'
+  :'<div class="eyebrow c-green">'+I.bag+'Rata-rata Rebagging</div><div class="big num">'+n0(b.avg)+'<small>JB/hari</small></div><div class="sub"><span class="'+(b.avg>=b.target?'c-green':'c-orange')+'">'+pct(b.avg/b.target,0)+' dari target '+n0(b.target)+'</span> · '+b.days+' hari</div>'}
+function headOut(x){var o=D.kpi.out;return x?'<div class="eyebrow c-blue">'+I.truck+dt(x.day)+'</div><div class="big num">'+ton(x.kg)+'<small>ton</small></div><div class="sub">'+n0(x.truk)+' truk · '+n0(x.jb)+' JB</div>'
+  :'<div class="eyebrow c-blue">'+I.truck+'Rata-rata Pengiriman</div><div class="big num">'+n0(o.avgJb)+'<small>JB/hari</small></div><div class="sub"><span class="c-red">butuh '+n0(o.needPace)+' JB/hari</span> agar sesuai SLA</div>'}
+
+/* ---------- tab & navbar ---------- */
+Array.prototype.forEach.call(document.querySelectorAll('.tabbar button'),function(btn){
+  btn.addEventListener('click',function(){
+    TAB=btn.dataset.s;
+    document.querySelectorAll('.tabbar button').forEach(function(b){b.classList.toggle('on',b===btn)});
+    document.querySelectorAll('section').forEach(function(s){s.classList.toggle('on',s.id==='s-'+TAB)});
+    $('bigTitle').textContent=btn.dataset.t; $('smallTitle').textContent=btn.dataset.t;
+    try{localStorage.setItem(KEY+'_tab',TAB)}catch(e){}
+    window.scrollTo(0,0);
+  });
+});
+window.addEventListener('scroll',function(){$('navbar').classList.toggle('scrolled',window.scrollY>36)},{passive:true});
+
+/* ---------- data ---------- */
+function load(force){
+  $('refresh').classList.add('spin');
+  google.script.run.withSuccessHandler(function(json){
+    $('refresh').classList.remove('spin'); $('err').innerHTML='';
+    try{localStorage.setItem(KEY,json)}catch(e){}
+    render(JSON.parse(json),false);
+  }).withFailureHandler(function(e){
+    $('refresh').classList.remove('spin');
+    $('err').innerHTML='<div class="err">Gagal memuat data: '+esc(e&&e.message||e)+'</div>';
+  }).getDashboard(!!force);
+}
+(function init(){
+  try{var c=localStorage.getItem(KEY); if(c) render(JSON.parse(c),true);}catch(e){}
+  try{var t=localStorage.getItem(KEY+'_tab'); if(t){var b=document.querySelector('.tabbar button[data-s="'+t+'"]'); if(b) b.click();}}catch(e){}
+  load(false);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) load(false); });
+})();
+</script>
+</body>
+</html>
